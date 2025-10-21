@@ -1,40 +1,44 @@
-Gantt_Chart
+🗂️ Gantt_Chart
 
-ArcGIS → Python ETL → docs/data.json → dhtmlxGantt → GitHub Pages → GitHub Actions
+📘 ETL from ArcGIS Feature Layer → generate docs/data.json → visualize with dhtmlxGantt on GitHub Pages → automate via GitHub Actions.
 
-Pull tasks from ArcGIS Feature Layer, transform with Python, output docs/data.json, and visualize an interactive Gantt chart using dhtmlxGantt on GitHub Pages. A scheduled workflow keeps data fresh.
+📖 Introduction
 
-✨ Features
+Gantt_Chart provides a lightweight pipeline to keep a Gantt view of your ArcGIS tasks always up to date:
 
-🧰 ETL with pandas + arcgis → docs/data.json
+Pull data from ArcGIS Feature Layer
 
-📊 Frontend: dhtmlxGantt in docs/index.html
+Transform with Python (pandas + arcgis)
 
-🚀 Hosting: GitHub Pages from /docs
+Serve an interactive Gantt chart using dhtmlxGantt on GitHub Pages
 
-🔁 Automation: GitHub Actions (weekly + manual)
+Keep data fresh with scheduled & manual CI/CD via GitHub Actions
 
-🗂️ Structure
+🧱 Repository Structure
 Gantt_Chart/
-├─ Project_Management_ETL.py
-├─ docs/
-│  ├─ index.html
-│  ├─ data.json
-│  ├─ dhtmlxgantt.css
-│  └─ dhtmlxgantt.js
-└─ .github/workflows/main.yml
-
+│
+├── Project_Management_ETL.py   # ETL: ArcGIS → cleaned JSON for frontend
+├── docs/
+│   ├── index.html              # dhtmlxGantt entry page
+│   ├── data.json               # generated output (do not edit manually)
+│   ├── dhtmlxgantt.css         # dhtmlxGantt styles (or use CDN)
+│   └── dhtmlxgantt.js          # dhtmlxGantt script (or use CDN)
+└── .github/
+    └── workflows/
+        └── main.yml            # CI/CD workflow (schedule + dispatch)
 
 ⚡ Quick Start
 pip install pandas arcgis
 export ARCGIS_USERNAME="your_username"
 export ARCGIS_PASSWORD="your_password"
 python Project_Management_ETL.py
+
 # Preview (avoid file:// CORS)
 python -m http.server 8000  # open http://localhost:8000/docs/
 
 
-docs/data.json must match dhtmlxGantt format (dates consistent with your gantt.config.date_format).
+Data format: docs/data.json must follow dhtmlxGantt schema (e.g., text, start_date, duration, progress(0–1), parent, optional links).
+Dates: keep consistent with gantt.config.date_format (ISO YYYY-MM-DD recommended).
 
 🌐 GitHub Pages
 
@@ -48,7 +52,7 @@ Branch: main · Folder: /docs
 
 🗓️ Triggers:
 
-Schedule: 0 2 * * 1 (Mon 02:00 UTC)
+Schedule: 0 2 * * 1 (every Monday 02:00 UTC)
 
 Manual: workflow_dispatch
 
@@ -58,19 +62,17 @@ Manual: workflow_dispatch
 
 📥 Steps (high level):
 
-Checkout repo (no persisted credentials)
+Checkout repository (no persisted credentials)
 
 Setup Python 3.10
 
-Install deps: pandas, arcgis
+Install pandas, arcgis
 
-Run Project_Management_ETL.py with ARCGIS_USERNAME/ARCGIS_PASSWORD from Secrets
+Run Project_Management_ETL.py with ArcGIS creds from Secrets
 
-Commit docs/data.json and touch docs/index.html to bump timestamp; push to main
+Commit docs/data.json & touch docs/index.html, then push to main
 
-Call Pages Builds API to force rebuild
-
-Finish with a success message
+Call Pages Builds API to force a rebuild
 
 🔑 Secrets:
 
@@ -80,8 +82,8 @@ GITHUB_TOKEN (auto-provided at runtime)
 
 📝 Tips
 
-🕒 Cron is UTC. Convert from local time if needed.
+🕒 Cron uses UTC—convert from your local time if needed.
 
-🔄 If Pages doesn’t refresh, confirm Pages config and workflow permissions.
+🔄 If Pages doesn’t refresh, double-check Pages configuration and workflow permissions.
 
-🗃️ Keep data.json strictly aligned with dhtmlxGantt schema (date format, progress 0–1, parent IDs).
+✅ Validate data.json (dates/parent/progress) to prevent frontend errors.
