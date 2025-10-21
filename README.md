@@ -1,20 +1,23 @@
-🗂️ Gantt_Chart
+# 🗂️ Gantt_Chart
 
-📘 ETL from ArcGIS Feature Layer → generate docs/data.json → visualize with dhtmlxGantt on GitHub Pages → automate via GitHub Actions.
+> 📘 ETL from **ArcGIS Feature Layer** → generate **`docs/data.json`** → visualize with **dhtmlxGantt** on **GitHub Pages** → automate via **GitHub Actions**.
 
-📖 Introduction
+---
 
-Gantt_Chart keeps a Gantt view of ArcGIS tasks continuously up to date:
+## 📖 Introduction
 
-Pull data from ArcGIS Feature Layer
+**Gantt_Chart** keeps a Gantt view of ArcGIS tasks continuously up to date:
 
-Transform with Python (pandas, arcgis)
+- Pull data from **ArcGIS Feature Layer**
+- Transform with **Python** (`pandas`, `arcgis`)
+- Serve an interactive chart via **dhtmlxGantt** in `docs/index.html`
+- Update on a **schedule** (UTC) or **manual trigger** using **GitHub Actions**
 
-Serve an interactive chart via dhtmlxGantt in docs/index.html
+---
 
-Update on a schedule (UTC) or manual trigger using GitHub Actions
+## 🧱 Repository Structure
 
-🧱 Repository Structure
+```text
 Gantt_Chart/
 │
 ├── Project_Management_ETL.py        # ETL: ArcGIS → cleaned JSON for frontend
@@ -26,8 +29,9 @@ Gantt_Chart/
 └── .github/
     └── workflows/
         └── main.yml                 # CI/CD workflow (schedule + dispatch)
-
 🗺️ Architecture / Data Flow
+text
+复制代码
 ArcGIS Feature Layer
    (ARCGIS_USERNAME / ARCGIS_PASSWORD in Secrets)
             │
@@ -39,8 +43,9 @@ Project_Management_ETL.py  ───►  Clean / Map / Validate  ───►  d
                                                                   │
                                                                   ▼
                                                             GitHub Pages site
-
 ⚡ Quick Start (Local)
+bash
+复制代码
 # 1) Install
 pip install pandas arcgis
 
@@ -54,20 +59,16 @@ python Project_Management_ETL.py
 # 4) Preview (avoid file:// CORS)
 python -m http.server 8000
 # open http://localhost:8000/docs/
-
-
 ✅ On success, docs/data.json is (re)generated and the Gantt renders in your browser.
 
 🌐 GitHub Pages (Hosting)
-
 Settings → Pages → Deploy from a branch
 
 Branch: main · Folder: /docs
 
-After pushes to main, Pages deploys the content under docs/.
+Pushes to main redeploy the site.
 
 ⚙️ Workflow (CI/CD)
-
 File: .github/workflows/main.yml
 Goal: Keep docs/data.json fresh and force a Pages rebuild.
 Key points (no full YAML):
@@ -109,7 +110,6 @@ GITHUB_TOKEN (auto-provided during Actions runs)
 🕒 Cron is UTC. Convert from your local timezone if you need a different schedule.
 
 🗃️ Data Schema (docs/data.json)
-
 dhtmlxGantt expects a root object with data (tasks) and optional links (dependencies):
 
 Field	Type	Required	Description
@@ -136,15 +136,15 @@ type	string	✅	"0" FS, "1" SS, "2" FF, "3" SF (dhtmlxGantt)
 
 Minimal example:
 
+json
+复制代码
 {
   "data": [
     { "id": 1, "text": "Task", "start_date": "2025-10-01", "duration": 5, "progress": 0.4, "parent": 0 }
   ],
   "links": []
 }
-
 🔁 Field Mapping (ArcGIS → dhtmlxGantt)
-
 Map ArcGIS attributes to the expected Gantt fields inside Project_Management_ETL.py:
 
 dhtmlxGantt	Example ArcGIS Field	Transform / Notes
@@ -158,7 +158,6 @@ parent	ParentId	Use 0 / null for root
 🧪 Validate types and handle missing values to avoid frontend errors.
 
 🖥️ Frontend Notes (dhtmlxGantt)
-
 Include dhtmlxgantt.css and dhtmlxgantt.js in docs/index.html (or switch to a CDN).
 
 Ensure date parsing matches your data: set gantt.config.date_format if not ISO.
@@ -166,7 +165,6 @@ Ensure date parsing matches your data: set gantt.config.date_format if not ISO.
 Load docs/data.json via fetch/XHR and call gantt.parse(json).
 
 🔒 Security
-
 Store ArcGIS credentials in GitHub Actions Secrets (ARCGIS_USERNAME, ARCGIS_PASSWORD).
 
 Never commit credentials or tokens to the repository.
@@ -174,7 +172,6 @@ Never commit credentials or tokens to the repository.
 Limit workflow permissions to only what’s required (as outlined above).
 
 🧪 Validation Checklist
-
  docs/index.html renders a chart locally
 
  docs/data.json has valid data (and optional links)
@@ -188,7 +185,6 @@ Limit workflow permissions to only what’s required (as outlined above).
  Workflow runs manually and on schedule without errors
 
 🛠️ Troubleshooting
-
 Blank page locally: Use a local server (python -m http.server) instead of file:// to avoid CORS issues.
 
 Pages didn’t refresh: The workflow both touches docs/index.html and calls the Pages Builds API. Re-check Pages settings and workflow permissions (pages: write, id-token: write).
@@ -198,7 +194,6 @@ No commit: If data.json has no changes the commit may be skipped. Optionally add
 Time mismatch: Cron is UTC. Convert your local time to UTC before editing the schedule.
 
 🧭 Maintenance Tips
-
 Pin dependency versions in requirements.txt for reproducibility.
 
 Log ETL steps (counts, dropped rows) to simplify debugging in Actions.
@@ -206,7 +201,6 @@ Log ETL steps (counts, dropped rows) to simplify debugging in Actions.
 Keep a small sample dataset for local UI testing.
 
 🗺️ Roadmap (Optional)
-
 Dependencies (links) and critical path highlighting
 
 Custom themes / resource workload views
@@ -214,7 +208,6 @@ Custom themes / resource workload views
 Filters, grouping, and export (PNG/PDF)
 
 🤝 Contributing
-
 Fork & branch: feat/<name>
 
 Ensure the chart renders locally
@@ -222,5 +215,6 @@ Ensure the chart renders locally
 Open a PR describing changes and data schema impacts
 
 📄 License
-
 MIT (update if needed).
+
+复制代码
