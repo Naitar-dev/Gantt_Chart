@@ -24,8 +24,6 @@ Gantt_Chart/
 ├── docs/
 │   ├── index.html                   # dhtmlxGantt entry page
 │   ├── data.json                    # generated output (do not edit manually)
-│   ├── dhtmlxgantt.css              # dhtmlxGantt styles (or use CDN)
-│   └── dhtmlxgantt.js               # dhtmlxGantt script (or use CDN)
 └── .github/
     └── workflows/
         └── main.yml                 # CI/CD workflow (schedule + dispatch)
@@ -176,7 +174,7 @@ python -m http.server 8000
 
 ## 🔒 Security
 
-- Store ArcGIS credentials in **GitHub Actions Secrets** (`ARCGIS_USERNAME`, `ARCGIS_PASSWORD`).  
+- ‼️Store ArcGIS credentials in **GitHub Actions Secrets** (`ARCGIS_USERNAME`, `ARCGIS_PASSWORD`).  
 - Never commit credentials or tokens to the repository.  
 - Limit workflow permissions to **only** what’s required (as outlined above).
 
@@ -217,7 +215,3 @@ python -m http.server 8000
 3. Open a PR describing changes and schema impacts  
 
 ---
-
-## 📄 License
-
-MIT (update if needed)
